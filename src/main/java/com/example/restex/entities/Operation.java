@@ -9,7 +9,7 @@ import lombok.Getter;
 
 @Entity
 @Getter
-public class History {
+public class Operation {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,11 +25,11 @@ public class History {
 
   private LocalDateTime timestamp;
 
-  public History() {
+  public Operation() {
     this.timestamp = LocalDateTime.now();
   }
 
-  public History(Double firstNumber, Double secondNumber, Double percentage, Double result) {
+  public Operation(Double firstNumber, Double secondNumber, Double percentage, Double result) {
     this.firstNumber = firstNumber;
     this.secondNumber = secondNumber;
     this.percentage = percentage;

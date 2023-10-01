@@ -1,8 +1,8 @@
 package com.example.restex.controllers;
 
-import com.example.restex.entities.History;
+import com.example.restex.entities.Operation;
 import com.example.restex.exception.ExternalServiceException;
-import com.example.restex.repositories.HistoryRepository;
+import com.example.restex.repositories.OperationRepository;
 import com.example.restex.services.ExternalMockedService;
 import com.google.common.util.concurrent.RateLimiter;
 import org.springframework.http.HttpStatus;
@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class SumController {
 
   private final ExternalMockedService externalService;
-  private final HistoryRepository historyRepository;
+  private final OperationRepository operationRepository;
   private final RateLimiter rateLimiter;
 
-  public SumController(ExternalMockedService externalService, HistoryRepository historyRepository) {
+  public SumController(ExternalMockedService externalService, OperationRepository operationRepository) {
     this.externalService = externalService;
-    this.historyRepository = historyRepository;
+    this.operationRepository = operationRepository;
     this.rateLimiter = RateLimiter.create(0.05); // 3 requests per minute
   }
 
@@ -36,17 +36,17 @@ public class SumController {
       percentage = externalService.getPercentageService();
 
       result = (first + second) * (1 + percentage / 100);
-      historyRepository.save(new History(first, second, percentage, result));
+      operationRepository.save(new Operation(first, second, percentage, result));
       return ResponseEntity.ok(result);
 
     } catch (ExternalServiceException ex) {
-      History lastHistory = historyRepository.findLastHistory();
+      Operation lastOperation = operationRepository.findLastHistory();
 
-      if (lastHistory == null){
+      if (lastOperation == null){
         throw ex;
       }
 
-      result = lastHistory.getResult();
+      result = lastOperation.getResult();
       return ResponseEntity.ok(result);
     }
 
