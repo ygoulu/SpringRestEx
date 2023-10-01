@@ -15,9 +15,9 @@ public class History {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private Double num1;
+  private Double firstNumber;
 
-  private Double num2;
+  private Double secondNumber;
 
   private Double percentage;
 
@@ -29,9 +29,9 @@ public class History {
     this.timestamp = LocalDateTime.now();
   }
 
-  public History(Double num1, Double num2, Double percentage, Double result) {
-    this.num1 = num1;
-    this.num2 = num2;
+  public History(Double firstNumber, Double secondNumber, Double percentage, Double result) {
+    this.firstNumber = firstNumber;
+    this.secondNumber = secondNumber;
     this.percentage = percentage;
     this.result = result;
     this.timestamp = LocalDateTime.now();
