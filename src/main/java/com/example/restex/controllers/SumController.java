@@ -1,11 +1,15 @@
 package com.example.restex.controllers;
 
+import com.example.restex.entities.History;
 import com.example.restex.entities.Operation;
+import com.example.restex.enums.Endpoint;
 import com.example.restex.exception.ExternalServiceException;
+import com.example.restex.repositories.HistoryRepository;
 import com.example.restex.repositories.OperationRepository;
 import com.example.restex.services.ExternalMockedService;
-import com.google.common.util.concurrent.RateLimiter;
-import org.springframework.http.HttpStatus;
+import java.time.LocalDateTime;
+import java.util.List;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,19 +20,16 @@ public class SumController {
 
   private final ExternalMockedService externalService;
   private final OperationRepository operationRepository;
-  private final RateLimiter rateLimiter;
+  private final HistoryRepository historyRepository;
 
-  public SumController(ExternalMockedService externalService, OperationRepository operationRepository) {
+  public SumController(ExternalMockedService externalService, OperationRepository operationRepository, HistoryRepository historyRepository) {
     this.externalService = externalService;
     this.operationRepository = operationRepository;
-    this.rateLimiter = RateLimiter.create(0.05); // 3 requests per minute
+    this.historyRepository = historyRepository;
   }
 
   @GetMapping("/sum")
-  public ResponseEntity<Double> sum(@RequestParam Double first, @RequestParam Double second) throws Exception {
-    if (!rateLimiter.tryAcquire()) {
-      return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
-    }
+  public ResponseEntity<Double> sum(@RequestParam Double first, @RequestParam Double second) {
 
     Double percentage;
     Double result;
@@ -36,19 +37,33 @@ public class SumController {
       percentage = externalService.getPercentageService();
 
       result = (first + second) * (1 + percentage / 100);
-      operationRepository.save(new Operation(first, second, percentage, result));
+
+      Operation newOperation = new Operation(first, second, percentage, result);
+      operationRepository.save(newOperation);
+
+      historyRepository.save(new History(Endpoint.SUM, newOperation.getTimestamp(), newOperation));
       return ResponseEntity.ok(result);
 
     } catch (ExternalServiceException ex) {
       Operation lastOperation = operationRepository.findLastHistory();
 
-      if (lastOperation == null){
+      if (lastOperation == null) {
+        historyRepository.save(new History(Endpoint.SUM, LocalDateTime.now(), ex));
         throw ex;
       }
 
       result = lastOperation.getResult();
+      historyRepository.save(new History(Endpoint.SUM, LocalDateTime.now(), lastOperation));
       return ResponseEntity.ok(result);
     }
+  }
 
+  @GetMapping("/history")
+  public ResponseEntity<List<History>> history(Pageable pageable) {
+
+    List<History> history = historyRepository.findAllWithOperation();
+    //save history call after seeing the history
+    historyRepository.save(new History(Endpoint.HISTORY, LocalDateTime.now()));
+    return ResponseEntity.ok(history);
   }
 }
