@@ -8,9 +8,8 @@ import com.example.restex.repositories.HistoryRepository;
 import com.example.restex.repositories.OperationRepository;
 import com.example.restex.services.ExternalMockedService;
 import java.time.LocalDateTime;
-import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -60,10 +59,8 @@ public class SumController {
   }
 
   @GetMapping("/history")
-  public ResponseEntity<List<History>> history(Pageable pageable) {
-    //get the history of calls
-    Sort sort = Sort.by(Sort.Direction.DESC, "id");
-    List<History> history = historyRepository.findAllWithOperation(sort);
+  public ResponseEntity<Page<History>> history(Pageable pageable) {
+    Page<History> history = historyRepository.findAllWithOperation(pageable);
     //save history call after seeing the history
     historyRepository.save(new History(Endpoint.HISTORY, LocalDateTime.now()));
     return ResponseEntity.ok(history);
