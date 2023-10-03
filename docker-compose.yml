@@ -13,7 +13,8 @@ services:
       - postgres-data:/var/lib/postgresql/data
 
   app:
-    build: .
+    image: 'restex-app'
+    container_name: 'restex-app-container'
     ports:
       - "8080:8080"
     depends_on:

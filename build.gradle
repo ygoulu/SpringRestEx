@@ -11,6 +11,16 @@ java {
 	sourceCompatibility = '17'
 }
 
+jar {
+ duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+ manifest {
+  attributes 'Main-Class': 'com.example.sumapi.SumApiApplication'
+ }
+ from {
+  configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+ }
+}
+
 repositories {
 	mavenCentral()
 }
