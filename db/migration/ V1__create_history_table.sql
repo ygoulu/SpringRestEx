@@ -1,4 +1,4 @@
-CREATE TABLE operation
+CREATE TABLE IF NOT EXISTS operation
 (
     id            BIGSERIAL PRIMARY KEY,
     first_number  DOUBLE PRECISION NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE operation
     timestamp     TIMESTAMP        NOT NULL
 );
 
-CREATE TABLE history
+CREATE TABLE IF NOT EXISTS history
 (
     id           SERIAL PRIMARY KEY,
     endpoint     VARCHAR(255) NOT NULL,
