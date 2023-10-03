@@ -1,43 +1,43 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.1.3'
-	id 'io.spring.dependency-management' version '1.1.3'
+    id 'java'
+    id 'org.springframework.boot' version '3.1.3'
+    id 'io.spring.dependency-management' version '1.1.3'
 }
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '17'
+    sourceCompatibility = '17'
 }
 
 jar {
- duplicatesStrategy = DuplicatesStrategy.EXCLUDE
- manifest {
-  attributes 'Main-Class': 'com.example.sumapi.SumApiApplication'
- }
- from {
-  configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
- }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes 'Main-Class': 'com.example.sumapi.SumApiApplication'
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	compileOnly('org.projectlombok:lombok:1.18.26')
-	annotationProcessor('org.projectlombok:lombok:1.18.26')
-	implementation 'com.google.guava:guava:30.1.1-jre'
-	implementation 'org.springframework.retry:spring-retry:1.3.1'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'com.github.vladimir-bukhtoyarov:bucket4j-core:7.6.0'
-	runtimeOnly 'org.postgresql:postgresql'
+    compileOnly('org.projectlombok:lombok:1.18.26')
+    annotationProcessor('org.projectlombok:lombok:1.18.26')
+    implementation 'com.google.guava:guava:30.1.1-jre'
+    implementation 'org.springframework.retry:spring-retry:1.3.1'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'com.github.vladimir-bukhtoyarov:bucket4j-core:7.6.0'
+    runtimeOnly 'org.postgresql:postgresql'
 
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }

@@ -8,7 +8,7 @@ COPY ./build.gradle ./gradlew ./gradlew.bat $APP_HOME
 COPY gradle $APP_HOME/gradle
 COPY ./src $APP_HOME/src/
 # Build desirable JAR
-RUN ./gradlew clean build -x test
+RUN ./gradlew clean build
 
 # Run Jar
 FROM openjdk:17-jdk-slim
