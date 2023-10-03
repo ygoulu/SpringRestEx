@@ -4,6 +4,7 @@ import com.example.restex.entities.History;
 import com.example.restex.entities.Operation;
 import com.example.restex.enums.Endpoint;
 import com.example.restex.exception.ExternalServiceException;
+import com.example.restex.exception.TooManyRequestsException;
 import com.example.restex.repositories.HistoryRepository;
 import com.example.restex.repositories.OperationRepository;
 import com.example.restex.services.ExternalMockedService;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SumController {
 
+  private final long tokensPerMinute = 3;
   private final ExternalMockedService externalService;
   private final OperationRepository operationRepository;
   private final HistoryRepository historyRepository;
@@ -33,7 +35,7 @@ public class SumController {
     this.operationRepository = operationRepository;
     this.historyRepository = historyRepository;
     //configuration for rate limiter, set in 3RPM. Each endpoint will consume 1 token per request, and this will refill in 1 minute.
-    Bandwidth limit = Bandwidth.classic(3, Refill.greedy(3, Duration.ofMinutes(1)));
+    Bandwidth limit = Bandwidth.classic(3, Refill.greedy(tokensPerMinute, Duration.ofMinutes(1)));
     this.bucket = Bucket.builder()
         .addLimit(limit)
         .build();
@@ -68,7 +70,7 @@ public class SumController {
         return ResponseEntity.ok(result);
       }
     }
-    return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+    throw new TooManyRequestsException(bucket.getAvailableTokens() + " available tokens of " + tokensPerMinute + " per minute") ;
   }
 
   @GetMapping("/history")
@@ -80,6 +82,6 @@ public class SumController {
       historyRepository.save(new History(Endpoint.HISTORY, LocalDateTime.now()));
       return ResponseEntity.ok(history);
     }
-    return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+    throw new TooManyRequestsException(bucket.getAvailableTokens() + " available tokens of " + tokensPerMinute + " per minute");
   }
 }
