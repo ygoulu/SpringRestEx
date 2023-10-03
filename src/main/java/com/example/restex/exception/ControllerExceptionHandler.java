@@ -37,7 +37,7 @@ public class ControllerExceptionHandler {
         HTTPMessage.BAD_REQUEST.getValue(),
         ex.getMessage());
 
-    return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+    return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
   }
 
   //Not found exception
@@ -50,7 +50,7 @@ public class ControllerExceptionHandler {
         HTTPMessage.TOO_MANY_REQUESTS.getValue(),
         ex.getMessage());
 
-    return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+    return new ResponseEntity<>(message, HttpStatus.TOO_MANY_REQUESTS);
   }
 
   //Default exception

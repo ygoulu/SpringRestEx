@@ -15,7 +15,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -70,7 +69,7 @@ public class SumController {
         return ResponseEntity.ok(result);
       }
     }
-    throw new TooManyRequestsException(bucket.getAvailableTokens() + " available tokens of " + tokensPerMinute + " per minute") ;
+    throw new TooManyRequestsException(bucket.getAvailableTokens() + " available tokens of " + tokensPerMinute + " per minute");
   }
 
   @GetMapping("/history")
