@@ -1,0 +1,115 @@
+{
+	"info": {
+		"_postman_id": "e4aac97e-f4b0-449a-b906-82f946eb5814",
+		"name": "Spring Rest Example",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "sum",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{scope_url}}/sum?first={{first_number}}&second={{second_number}}",
+					"host": [
+						"{{scope_url}}"
+					],
+					"path": [
+						"sum"
+					],
+					"query": [
+						{
+							"key": "first",
+							"value": "{{first_number}}"
+						},
+						{
+							"key": "second",
+							"value": "{{second_number}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "history",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{scope_url}}/history?sort={{sort_param}},{{sort_value}}&size={{page_limit}}",
+					"host": [
+						"{{scope_url}}"
+					],
+					"path": [
+						"history"
+					],
+					"query": [
+						{
+							"key": "sort",
+							"value": "{{sort_param}},{{sort_value}}"
+						},
+						{
+							"key": "size",
+							"value": "{{page_limit}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "first_number",
+			"value": "5",
+			"type": "default"
+		},
+		{
+			"key": "second_number",
+			"value": "5",
+			"type": "default"
+		},
+		{
+			"key": "page_limit",
+			"value": "10",
+			"type": "default"
+		},
+		{
+			"key": "sort_param",
+			"value": "id",
+			"type": "default"
+		},
+		{
+			"key": "sort_value",
+			"value": "desc",
+			"type": "default"
+		},
+		{
+			"key": "scope_url",
+			"value": "localhost:8080",
+			"type": "default"
+		}
+	]
+}
