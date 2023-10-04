@@ -4,6 +4,7 @@ services:
   postgres:
     image: postgres:16-alpine
     container_name: db
+    restart: always
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
@@ -13,11 +14,12 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
       # copy the sql script to create tables
-      - /db/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+      - /db/migration/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
 
   app:
     image: 'restex-app'
     container_name: 'restex-app-container'
+    restart: always
     ports:
       - "8080:8080"
     depends_on:
